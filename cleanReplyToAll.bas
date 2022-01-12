@@ -1,13 +1,12 @@
-Sub cleanDyanmic(ByVal Item As Object)
-  Const endingAddress As String = "someaddress.com"
-    
+Private Sub Application_ItemSend(ByVal Item As Object, Cancel As Boolean)
+    Const endingAddress As String = "@nttdata.com"
+
     Dim theType As String, senderEmail As String, i As Long
         theType = TypeName(Item)
         
         If theType = "MailItem" Or theType = "AppointmentItem" Or theType = "MeetingItem" Then
         
-                senderEmail = Item.SendUsingAccount.DisplayName
-                senderEmail = LCase(Mid(senderEmail, 1, InStr(1, senderEmail, "@", vbTextCompare)) _
+            senderEmail = LCase(Application.Session.Accounts.Item(1).UserName _
                 & endingAddress)
 
             For i = Item.Recipients.Count To 1 Step -1
