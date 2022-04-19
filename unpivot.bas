@@ -1,20 +1,26 @@
 'This Function will unpivot data into a list of rows for each intersection of table
 'Similar to reversing out of a pivot table to a flat file.
 Function unPivotData(theDataRange As Range, theColumnRange As Range, theRowRange As Range, Optional skipZerosAsTrue As Boolean, Optional includeBlanksAsTrue As Boolean)
+
+
+'Set effecient range
+Dim cleanedDataRange As Range
+    Set cleanedDataRange = Intersect(theDataRange, theDataRange.Worksheet.UsedRange)
    
 'tests Data ranges
-'okay to have entire rows/columns for axis members
-   If theDataRange.EntireColumn.Address <> Intersect(theDataRange.EntireColumn, theColumnRange).EntireColumn.Address Then
+
+    'Use intersect address to account for users selecting full row or column
+   If cleanedDataRange.EntireColumn.Address <> Intersect(cleanedDataRange.EntireColumn, theColumnRange).EntireColumn.Address Then
       unPivotData = "datarange missing Column Ranges"
 
-   ElseIf theDataRange.EntireRow.Address <> Intersect(theDataRange.EntireRow, theRowRange).EntireRow.Address Then
+   ElseIf cleanedDataRange.EntireRow.Address <> Intersect(cleanedDataRange.EntireRow, theRowRange).EntireRow.Address Then
       unPivotData = "datarange missing row Ranges"
 
-   ElseIf Not Intersect(theDataRange, theColumnRange) Is Nothing Then
-      unPivotData = "datarange may not intersect column range.  " & Intersect(theDataRange, theColumnRange).Address
+   ElseIf Not Intersect(cleanedDataRange, theColumnRange) Is Nothing Then
+      unPivotData = "datarange may not intersect column range.  " & Intersect(cleanedDataRange, theColumnRange).Address
       
-   ElseIf Not Intersect(theDataRange, theRowRange) Is Nothing Then
-      unPivotData = "datarange may not intersect row range.  " & Intersect(theDataRange, theRowRange).Address
+   ElseIf Not Intersect(cleanedDataRange, theRowRange) Is Nothing Then
+      unPivotData = "datarange may not intersect row range.  " & Intersect(cleanedDataRange, theRowRange).Address
    
    End If
 
@@ -28,7 +34,7 @@ Function unPivotData(theDataRange As Range, theColumnRange As Range, theRowRange
    ReDim newdata(dimCount, i)
    
 'loops through data ranges
-   For Each aCell In theDataRange.Cells
+   For Each aCell In cleanedDataRange.Cells
    
       If aCell.Value2 = "" And Not (includeBlanksAsTrue) Then
          'skip
