@@ -88,16 +88,15 @@ Function DocGetCoverInfo(oDoc)
     '--------------------------------------------------------------------
     Dim oHeader, oRange As Range
 
-    Dim n, ltitle As Long
-    Dim LogoHeight, MinLogoHeight As Long
-    Dim s, minFS, maxFS As Integer
-    Dim strTitleInfo, strSubTitleInfo, Auxstr As String
+    Dim n As Long, ltitle As Long
+    Dim LogoHeight As Long, MinLogoHeight As Long
+    Dim s As Integer, minFS As Integer, maxFS As Integer
+    Dim strTitleInfo As String, strSubTitleInfo As String, Auxstr As String
     Dim GetCoverPagePar
 
     minFS = 200
     maxFS = 0
-    strTitleInfo = ""
-    strSubTitleInfo = ""
+
     GetCoverPagePar = GetCoverPageRange(oDoc)
 
 
@@ -141,7 +140,7 @@ Function DocGetCoverInfo(oDoc)
         End If
     Next n
 
-    'strTitleInfo = Replace(strTitleInfo, Chr(11), Chr(13))
+
     If Len(strTitleInfo) > 200 Then
         strTitleInfo = Split(strTitleInfo, Chr(13))(0)
     End If
@@ -205,20 +204,15 @@ Function GetCoverPageRange(oDoc)
     '--------------------------------------------------------------------
     ' This function determines Cover page range
     '--------------------------------------------------------------------
-    Dim MinLogoHeight, LogoHeight As Long
-    Dim lgPage As Long
-    Dim h, s, startPara, n As Integer
-    Dim strTitleInfo, strSubTitleInfo As String
+    Dim MinLogoHeight As Long, LogoHeight As Long, lgPage As Long
+    Dim h As Integer, s As Integer, startPara As Integer, n As Integer
+    Dim strTitleInfo As String, strSubTitleInfo As String
     Dim oRange As Range
     Dim oHeader
 
     '--------------------------------------------------------------------
     '--- Defaults ---
     MinLogoHeight = 1000000 '--> Minimun first page Header Picture Header
-
-    strTitleInfo = ""
-    strSubTitleInfo = ""
-
 
 
     '--------------------------------------------------------------------
@@ -337,8 +331,8 @@ Function GetContentTablePar(oDoc, AuxDoc, Optional OAPercent)
     '--------------------------------------------------------------------
     Dim oRange  As Range
     Dim Auxstr As String
-    Dim p, lgPage, n As Long
-    Dim startPara, opt As Integer
+    Dim p As Long, lgPage As Long, n As Long
+    Dim startPara As Integer, opt As Integer
     Dim CTOptionArray
 
     GetContentTablePar = Array(0, 0)
@@ -556,7 +550,7 @@ Function GetHeaderSize(AuxDoc, oRange, Optional OAPercent)
 ' This function determines Header 1 size asociating with maximun font size
 '--------------------------------------------------------------------
 Dim n As Long
-Dim minFS, maxFS As Integer
+Dim minFS As Integer, maxFS As Integer
 
 '--- Find by Font Size ---
 minFS = 200
