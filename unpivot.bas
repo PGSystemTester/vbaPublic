@@ -1,6 +1,7 @@
 'This Function will unpivot data into a list of rows for each intersection of table
 'Similar to reversing out of a pivot table to a flat file.
-Function unPivotData(theDataRange As Range, theColumnRange As Range, theRowRange As Range, Optional skipZerosAsTrue As Boolean, Optional includeBlanksAsTrue As Boolean)
+Function unPivotData(theDataRange As Range, theColumnRange As Range, theRowRange As Range, _
+    Optional skipZerosAsTrue As Boolean, Optional includeBlanksAsTrue As Boolean, Optional columnsFirst As Boolean)
 
 
 'Set effecient range
@@ -30,33 +31,38 @@ Dim cleanedDataRange As Range
    Dim dimCount As Long
       dimCount = theColumnRange.Rows.Count + theRowRange.Columns.Count
    
-   Dim aCell As Range, i As Long, g As Long
+   Dim aCell As Range, i As Long, g As Long, tangoRange As Range
    ReDim newdata(dimCount, i)
    
 'loops through data ranges
    For Each aCell In cleanedDataRange.Cells
    
-      If aCell.Value2 = "" And Not (includeBlanksAsTrue) Then
-         'skip
-      ElseIf aCell.Value2 = 0 And skipZerosAsTrue Then
-         'skip
-      Else
-         ReDim Preserve newdata(dimCount, i)
-         g = 0
+  If aCell.Value2 = "" And Not (includeBlanksAsTrue) Then
+     'skip
+  ElseIf aCell.Value2 = 0 And skipZerosAsTrue Then
+     'skip
+  Else
+     ReDim Preserve newdata(dimCount, i)
+     g = 0
          
-      'gets DimensionMembers members
-         For Each gcell In Union(Intersect(aCell.EntireColumn, theColumnRange), _
-            Intersect(aCell.EntireRow, theRowRange)).Cells
-               
+    'gets DimensionMembers members
+        If columnsFirst Then
+            Set tangoRange = Union(Intersect(aCell.EntireColumn, theColumnRange), _
+                Intersect(aCell.EntireRow, theRowRange))
+          Else
+           Set tangoRange = Union(Intersect(aCell.EntireRow, theRowRange), _
+           Intersect(aCell.EntireColumn, theColumnRange))
+        End If
+
+        For Each gcell In tangoRange.Cells
             newdata(g, i) = IIf(gcell.Value2 = "", "", gcell.Value)
             g = g + 1
-         Next gcell
-      
-         newdata(g, i) = IIf(aCell.Value2 = "", "", aCell.Value)
-         i = i + 1
-      End If
+        Next gcell
+
+             newdata(g, i) = IIf(aCell.Value2 = "", "", aCell.Value)
+             i = i + 1
+    End If
    Next aCell
             
    unPivotData = WorksheetFunction.Transpose(newdata)
-
 End Function
